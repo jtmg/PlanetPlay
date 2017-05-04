@@ -2,6 +2,16 @@
     <string name="app_name">PlanetPlay</string>
     <string name="user_name">User Name:</string>
     <string name="login">Login</string>
-    <string name="password">PassWord:</string>
+    <string name="password">Password:</string>
     <string name="create_account">Create Account</string>
+    <string name="password1">Password:</string>
+    <string name="email">Email:</string>
+    <string name="confirm_password">Confirm Password:</string>
+    <string name="create_account1">Create Account</string>
+    <string name="title_activity_home">Home</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="Create_Account"
     tools:context="com.example.topog.planetplay.LoginActivity">
 
     <ImageView
@@ -28,14 +27,6 @@
         android:layout_marginTop="18dp"
         android:text="@string/user_name" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:text="@string/user_name" />
 
     <TextView
         android:id="@+id/textView3"
@@ -76,7 +67,7 @@
         android:layout_marginTop="22dp"
         android:text="@string/login"
         android:textSize="10sp"
-        android:onClick="Login"
+        android:onClick="ClickMe"
         tools:ignore="SmallSp" />
 
     <Button
@@ -85,7 +76,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:clickable="true"
-        android:onClick="Create_Account"
+        android:onClick="ClickMe"
         android:text="@string/create_account"
         android:textSize="10sp"
         android:textColor="@color/colorPrimaryDark"
