@@ -112,7 +112,6 @@ public class Home extends AppCompatActivity
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("token",null);
             editor.apply();
-            String pref = sp.getString("token", null);
             LoginManager.getInstance().logOut();
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,10 +31,11 @@ public class CreateAccount extends AppCompatActivity {
     }
     public void Click(View view)
     {
-        user = (EditText) findViewById(R.id.user_name2);
+        user = (EditText) findViewById(R.id.user_name);
         email = (EditText) findViewById(R.id.email2);
         password = (EditText) findViewById(R.id.password2);
         confPass = (EditText) findViewById(R.id.confirm);
+
 
         if ((password.getText().toString().equals("")) || (confPass.getText().toString().equals("")) || (email.getText().toString().equals("")) || (user.getText().toString().equals("")))
         {

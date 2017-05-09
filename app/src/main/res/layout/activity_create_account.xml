@@ -46,17 +46,6 @@
         android:layout_alignLeft="@+id/user_name"
         android:layout_alignStart="@+id/user_name" />
 
-    <EditText
-        android:id="@+id/user_name2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/user_name"
-        android:layout_alignBottom="@+id/user_name"
-        android:layout_alignLeft="@+id/user_name"
-        android:layout_alignStart="@+id/user_name"
-        android:ems="10"
-        android:inputType="textPersonName" />
-
     <TextView
         android:id="@+id/email"
         android:layout_width="wrap_content"

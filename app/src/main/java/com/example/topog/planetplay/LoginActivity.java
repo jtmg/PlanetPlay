@@ -23,10 +23,15 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +42,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -68,14 +74,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 SharedPreferences.Editor editor = sp.edit();
+                final String[] fbuser = new String[2];
+
+                GraphRequestAsyncTask request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        fbuser[0] = object.optString("name");
+                        fbuser[1] = object.optString("name");
+                    }
+                }).executeAsync();
+
+                Log.i("lindos", fbuser[0]);
+
                 editor.putString("token",loginResult.getAccessToken().getUserId());
                 editor.commit();
-                Log.i("status",loginResult.getAccessToken().getUserId());
                 Bundle bundle = new Bundle();
                 bundle.putString("ID",loginResult.getAccessToken().getUserId());
                 Start(bundle);
             }
-
             @Override
             public void onCancel() {
                 Log.i("status","onCancel");
