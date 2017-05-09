@@ -67,7 +67,12 @@ public class Home extends AppCompatActivity
         getMenuInflater().inflate(R.menu.home, menu);
         profilePictureView = (ProfilePictureView) findViewById(R.id.friendProfilePicture);
         Bundle bundle = getIntent().getExtras();
-        profilePictureView.setProfileId(bundle.getString("ID"));
+        String status = bundle.getString("Fb");
+        if (status != "no")
+        {
+            profilePictureView.setProfileId(bundle.getString("ID"));
+        }
+
 
 
 

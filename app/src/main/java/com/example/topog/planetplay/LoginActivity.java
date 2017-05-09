@@ -151,13 +151,15 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void Login (String result)
     {
-
-
         if (result.equals("user exists"))
         {
             Intent intent = new Intent(this, Home.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("Fb","no");
+            intent.putExtras(bundle);
             startActivity(intent);
             finish();
+
 
         }else
         {
