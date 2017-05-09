@@ -37,7 +37,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/email2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -47,11 +47,13 @@
         android:layout_alignStart="@+id/user_name" />
 
     <EditText
-        android:id="@+id/editText6"
+        android:id="@+id/user_name2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
+        android:layout_alignBaseline="@+id/user_name"
+        android:layout_alignBottom="@+id/user_name"
+        android:layout_alignLeft="@+id/user_name"
+        android:layout_alignStart="@+id/user_name"
         android:ems="10"
         android:inputType="textPersonName" />
 
@@ -70,15 +72,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:text="@string/password1"
-        android:layout_below="@+id/editText5"
+        android:layout_below="@+id/email2"
         android:layout_centerHorizontal="true" />
 
     <EditText
-        android:id="@+id/Password2"
+        android:id="@+id/password2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editText5"
-        android:layout_alignRight="@+id/editText5"
+        android:layout_alignEnd="@+id/email2"
+        android:layout_alignRight="@+id/email2"
         android:layout_below="@+id/Password"
         android:ems="10"
         android:inputType="textPassword" />
@@ -89,26 +91,26 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
         android:text="@string/confirm_password"
-        android:layout_below="@+id/Password2"
+        android:layout_below="@+id/password2"
         android:layout_centerHorizontal="true" />
 
     <EditText
-        android:id="@+id/ConfirmPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Password2"
-        android:layout_alignStart="@+id/Password2"
+        android:layout_alignLeft="@+id/password2"
+        android:layout_alignStart="@+id/password2"
         android:layout_below="@+id/confirmpass"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:id="@+id/confirm" />
 
     <Button
         android:id="@+id/Create_Account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:onClick="Click"
         android:text="@string/create_account1"
-        android:layout_below="@+id/ConfirmPass"
+        android:layout_below="@+id/confirm"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
