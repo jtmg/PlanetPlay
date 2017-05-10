@@ -1,44 +1,29 @@
 package com.example.topog.planetplay;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.hardware.camera2.params.Face;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
-import com.facebook.LoggingBehavior;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.login.widget.ProfilePictureView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,12 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import static android.widget.Toast.LENGTH_LONG;
-
-
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -79,9 +59,6 @@ public class LoginActivity extends AppCompatActivity {
             Start(bundle);
             finish();
         }
-
-
-
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
        // LoginManager.getInstance()
@@ -127,14 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                 request.setParameters(parameters);
                 request.executeAsync();
 
-//                //final Bundle bundle = new Bundle();
-//                SharedPreferences.Editor editor = sp.edit();
-//                editor.putString("token",loginResult.getAccessToken().getUserId());
-//                editor.commit();
-//
-//                bundle.putString("ID",loginResult.getAccessToken().getUserId());
-//                bundle.putString("Fb","yes");
-//                Start(bundle);
             }
             @Override
             public void onCancel() {
@@ -235,6 +204,10 @@ public class LoginActivity extends AppCompatActivity {
                 BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
                 String line;
                 while ((line= rd.readLine()) != null) result.append(line);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("name",params[0]);
+                editor.putString("token","1");
+                editor.commit();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
