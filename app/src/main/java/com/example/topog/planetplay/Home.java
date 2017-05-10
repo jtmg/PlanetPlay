@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -25,8 +27,10 @@ import com.facebook.login.widget.ProfilePictureView;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    SharedPreferences sp ;
+
     private ProfilePictureView profilePictureView;
+    private TextView userName,email;
+    SharedPreferences sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,7 @@ public class Home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
 
 
@@ -71,11 +76,14 @@ public class Home extends AppCompatActivity
         if (status != "no")
         {
             profilePictureView.setProfileId(bundle.getString("ID"));
+            String name = sp.getString("name",null);
+            String emailuser = sp.getString("email",null);
+            Toast.makeText(this,name,Toast.LENGTH_LONG).show();
+            userName = (TextView) findViewById(R.id.usernamehome);
+            userName.setText(name);
+            email = (TextView) findViewById(R.id.emailuserhome);
+            email.setText(emailuser);
         }
-
-
-
-
         return true;
     }
 

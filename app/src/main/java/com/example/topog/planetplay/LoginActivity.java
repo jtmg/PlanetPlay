@@ -1,10 +1,12 @@
 package com.example.topog.planetplay;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.hardware.camera2.params.Face;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -26,11 +29,14 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
+import com.facebook.LoggingBehavior;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -43,10 +49,14 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
     private EditText username;
     private EditText password;
     private LoginButton loginButton;
@@ -67,43 +77,78 @@ public class LoginActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.putString("ID",token);
             Start(bundle);
+            finish();
         }
 
 
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
+
+       // LoginManager.getInstance()
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                SharedPreferences.Editor editor = sp.edit();
-                final String[] fbuser = new String[2];
+            public void onSuccess(final LoginResult loginResult) {
+                final Bundle bundle = new Bundle();
 
-                GraphRequestAsyncTask request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        fbuser[0] = object.optString("name");
-                        fbuser[1] = object.optString("name");
-                    }
-                }).executeAsync();
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
 
-                Log.i("lindos", fbuser[0]);
+                                // Application code
+                                try {
+                                    String name = object.getString("name");
+                                    String email = object.getString("email");
+                                    bundle.putString("name",name);
+                                   // String birthday = object.getString("birthday"); // 01/31/1980 format
+                                    Log.v("email",name);
 
-                editor.putString("token",loginResult.getAccessToken().getUserId());
-                editor.commit();
-                Bundle bundle = new Bundle();
-                bundle.putString("ID",loginResult.getAccessToken().getUserId());
-                Start(bundle);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("token",loginResult.getAccessToken().getUserId());
+                                    editor.putString("name",name);
+                                    editor.putString("email",email);
+                                    editor.commit();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                //final Bundle bundle = new Bundle();
+
+
+                                bundle.putString("ID",loginResult.getAccessToken().getUserId());
+                                bundle.putString("Fb","yes");
+                                Start(bundle);
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+//                //final Bundle bundle = new Bundle();
+//                SharedPreferences.Editor editor = sp.edit();
+//                editor.putString("token",loginResult.getAccessToken().getUserId());
+//                editor.commit();
+//
+//                bundle.putString("ID",loginResult.getAccessToken().getUserId());
+//                bundle.putString("Fb","yes");
+//                Start(bundle);
             }
             @Override
             public void onCancel() {
                 Log.i("status","onCancel");
+                LoginManager.getInstance().logOut();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.i("status","onError");
+                LoginManager.getInstance().logOut();
 
             }
         });
-
 
 
         try {
@@ -121,6 +166,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+
     public void Start(Bundle bundle)
     {
         Intent intent = new Intent(this,Home.class);
@@ -159,7 +206,6 @@ public class LoginActivity extends AppCompatActivity {
             intent.putExtras(bundle);
             startActivity(intent);
             finish();
-
 
         }else
         {
