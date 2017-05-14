@@ -1,5 +1,4 @@
 package com.example.topog.planetplay;
-
 import android.Manifest;
 import android.app.FragmentManager;
 import android.content.ContentResolver;
@@ -20,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContentResolverCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,7 +30,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,11 +43,10 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-
     private ArrayList<Songs> arrayList;
     private ProfilePictureView profilePictureView;
     private TextView userName,email;
@@ -55,7 +56,6 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_home);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -71,52 +71,16 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         permissions();
-        RelativeLayout ralative = (RelativeLayout) findViewById(R.id.Relative);
-        SetMusics(ralative);
+        SetMusics();
 
     }
-    public void SetMusics(RelativeLayout relative) {
-        int centerX = (getResources().getDisplayMetrics().widthPixels)/2;
-        int centerY = (getResources().getDisplayMetrics().heightPixels)/2;
-        int radius = 200;
-        int numberSong = arrayList.size();
+    public void SetMusics() {
+        ListView lista = (ListView) findViewById(R.id.MusicList);
+        Adapter adapter= new Adapter(this,arrayList);
+        lista.setAdapter(adapter);
 
-        Button center = new Button(this);
-        center.setText("Music");
-        center.setId(0);
-        center.setX(centerX - 9);
-        center.setY(centerY - 9);
-        center.setBackgroundResource(R.drawable.rounded);
-        center.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
-        relative.addView(center);
-        int id = 0;
-        for (int i = 0; i <= 360; i = i + 40) {
-            if (id != numberSong - 1) {
-                Button bt = new Button(this);
-                TextView vt = new TextView(this);
-                bt.setId(id);
-                bt.setBackgroundResource(R.drawable.rounded);
-                bt.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
-//TODO fazer o metodo on click para tratar a escolha das musicas
-                int newX = (int) ((radius * Math.cos(Math.toRadians(i))) + centerX);
-                int newY = (int) ((radius * Math.sin(Math.toRadians(i))) + centerY);
-                final String xx = arrayList.get(id).getSongTitle();
-                bt.setX(newX);
-                bt.setY(newY);
-                vt.setX(newX);
-                vt.setY(newY);
-                vt.setText(arrayList.get(id).getSongTitle());
-                bt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(Home.this, xx, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                relative.addView(bt);
-                relative.addView(vt);
-                id++;
-            }
-        }
+
+
     }
         public static int pxToDp(int px)
     {
