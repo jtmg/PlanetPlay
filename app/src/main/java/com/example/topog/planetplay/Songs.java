@@ -7,10 +7,12 @@ package com.example.topog.planetplay;
 public class Songs {
     private long mSongId;
     private String mSongTitle;
-    public Songs(long id, String title)
+    private String mSongArtist;
+    public Songs(long id, String title,String artist)
     {
         mSongId = id;
         mSongTitle = title;
+        mSongArtist = artist;
     }
     public long getSongID()
     {
@@ -20,5 +22,6 @@ public class Songs {
     {
         return mSongTitle;
     }
+    public String getSongArtist(){return mSongArtist; }
 
 }

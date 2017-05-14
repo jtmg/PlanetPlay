@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.topog.planetplay.FragmentDisplay"
+    tools:showIn="@layout/content_home"
+    android:id="@+id/Relative"
+
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+</RelativeLayout>
