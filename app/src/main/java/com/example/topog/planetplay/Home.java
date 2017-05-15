@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.gesture.Gesture;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,8 +20,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContentResolverCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,28 +35,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
-
 import java.util.ArrayList;
-import java.util.List;
-
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private ArrayList<Songs> arrayList;
     private ProfilePictureView profilePictureView;
     private TextView userName,email;
+    private MediaPlayer mediaPlayer;
+    private int pos;
+    private  int isPaused;
     SharedPreferences sp;
+    private GestureDetector detector ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,7 @@ public class Home extends AppCompatActivity
         setSupportActionBar(toolbar);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         arrayList = new ArrayList<Songs>();
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -74,20 +77,144 @@ public class Home extends AppCompatActivity
         SetMusics();
 
     }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+
+        return super.onTouchEvent(event);
+        // Return true if you have consumed the event, false if you haven't.
+        // The default implementation always returns false.
+    }
+
+    class Gestures_android implements GestureDetector.OnGestureListener,GestureDetector.OnDoubleTapListener
+    {
+
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.d("Gesture ", " onDown");
+            return false;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.d("Gesture ", " onSingleTapConfirmed");
+            return false;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.d("Gesture ", " onSingleTapUp");
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+            Log.d("Gesture ", " onShowPress");
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.d("Gesture ", " onDoubleTap");
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            Log.d("Gesture ", " onDoubleTapEvent");
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d("Gesture ", " onLongPress");
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+            mediaPlayer = new MediaPlayer();
+            Log.d("Gesture ", " onScroll");
+            if (e1.getY() < e2.getY()){
+                Log.d("Gesture ", " Scroll Down");
+
+            }
+            if(e1.getY() > e2.getY()){
+                Log.d("Gesture ", " Scroll Up");
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX() < e2.getX()) {
+                Log.d("Gesture ", "Left to Right swipe: "+ e1.getX() + " - " + e2.getX());
+                Log.d("Speed ", String.valueOf(velocityX) + " pixels/second");
+                int fastForward = mediaPlayer.getCurrentPosition();
+                 fastForward += 5000;
+                mediaPlayer.seekTo(fastForward);
+            }
+            if (e1.getX() > e2.getX()) {
+                Log.d("Gesture ", "Right to Left swipe: "+ e1.getX() + " - " + e2.getX());
+                Log.d("Speed ", String.valueOf(velocityX) + " pixels/second");
+                int backwards = mediaPlayer.getCurrentPosition();
+                backwards -= 5000;
+                mediaPlayer.seekTo(backwards);
+            }
+
+            return true;
+
+        }
+    }
     public void SetMusics() {
-        ListView lista = (ListView) findViewById(R.id.MusicList);
+        final ListView lista = (ListView) findViewById(R.id.MusicList);
+        lista.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         Adapter adapter= new Adapter(this,arrayList);
         lista.setAdapter(adapter);
 
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                if (mediaPlayer == null) {
+                    mediaPlayer = new MediaPlayer();
+                    Uri aux = Uri.parse(arrayList.get(position).getPath());
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), aux);
+                    mediaPlayer.start();
+                    pos = position;
+                }else
+                {
+                    if (position == pos && mediaPlayer.isPlaying())
+                    {
+                        mediaPlayer.pause();
+                        isPaused = mediaPlayer.getCurrentPosition();
+                    }else if(position == pos && !mediaPlayer.isPlaying())
+                    {
+                        mediaPlayer.seekTo(isPaused);
+                        mediaPlayer.start();
+                    }else
+                    {
+                        mediaPlayer.pause();
+                        Uri aux = Uri.parse(arrayList.get(position).getPath());
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), aux);
+                        mediaPlayer.start();
+                        pos = position;
+                    }
+                }
+
+            }
+        });
+        final GestureDetector gd = new GestureDetector(getApplication(),new Gestures_android());
+        View.OnTouchListener gl = new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gd.onTouchEvent(event);
+            }
+        };
+        lista.setOnTouchListener(gl);
     }
-        public static int pxToDp(int px)
-    {
-        return ((int)(px/ Resources.getSystem().getDisplayMetrics().density));
-    }
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -121,14 +248,7 @@ public class Home extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -201,12 +321,14 @@ public class Home extends AppCompatActivity
             int songId = songCursor.getColumnIndex(MediaStore.Audio.Media._ID);
             int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
             int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME);
+            int path = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
 
             do {
                 long currentId = songCursor.getLong(songId);
                 String currentTitle = songCursor.getString(songTitle);
                 String sonArtist = songCursor.getString(songArtist);
-                arrayList.add(new Songs(currentId, currentTitle,sonArtist));
+                String path1 = songCursor.getString(path);
+                arrayList.add(new Songs(currentId, currentTitle,sonArtist,path1));
             } while(songCursor.moveToNext());
         }else
         {
@@ -222,4 +344,6 @@ public class Home extends AppCompatActivity
             //resume tasks needing this permission
         }
     }
+
+
 }

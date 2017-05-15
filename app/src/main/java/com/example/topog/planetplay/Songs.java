@@ -8,11 +8,13 @@ public class Songs {
     private long mSongId;
     private String mSongTitle;
     private String mSongArtist;
-    public Songs(long id, String title,String artist)
+    private String path;
+    public Songs(long id, String title,String artist, String caminho)
     {
         mSongId = id;
         mSongTitle = title;
         mSongArtist = artist;
+        path = caminho;
     }
     public long getSongID()
     {
@@ -22,6 +24,11 @@ public class Songs {
     {
         return mSongTitle;
     }
+    public String getPath()
+    {
+        return  path;
+    }
+
     public String getSongArtist(){return mSongArtist; }
 
 }
