@@ -4,9 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.topog.planetplay.FragmentDisplay"
     tools:showIn="@layout/content_home"
-    android:id="@+id/mira"
-
-    >
+    android:id="@+id/mira">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -19,8 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:scrollingCache="true"
-        android:smoothScrollbar="true"
-        android:layout_marginTop="12dp" />
+        android:smoothScrollbar="true" />
+
+
 </RelativeLayout>
