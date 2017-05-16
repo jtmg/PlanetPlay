@@ -37,6 +37,7 @@
             android:background="@drawable/play"
             tools:ignore="ButtonStyle" />
 
+
         <Button
             android:id="@+id/forwards"
             android:layout_width="50dp"
