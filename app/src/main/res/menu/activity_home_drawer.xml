@@ -5,22 +5,22 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="Favorites" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="Trending" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Suggestions" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout_icon"
             android:title="LogOut" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Contact us">
         <menu>
             <item
                 android:id="@+id/nav_share"
