@@ -36,6 +36,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ public class Home extends AppCompatActivity
     private int pos;
     private  int isPaused;
     SharedPreferences sp;
+    private int currentPos;
     private GestureDetector detector ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +65,73 @@ public class Home extends AppCompatActivity
         setSupportActionBar(toolbar);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         arrayList = new ArrayList<Songs>();
+        pos = 0;
+        ImageView play = (ImageView) findViewById(R.id.playerStart);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mediaPlayer.isPlaying())
+                {
+                    currentPos = mediaPlayer.getCurrentPosition();
+                    mediaPlayer.pause();
+                }else
+                {
+                    mediaPlayer.seekTo(currentPos);
+                    mediaPlayer.start();
+                }
+            }
+        });
+        Button next = (Button) findViewById(R.id.forwards);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pos == arrayList.size())
+                {
+                    pos = 0;
+                }
+                if (pos == 0)
+                {
+                    mediaPlayer = new MediaPlayer ();
+                    Uri uri = Uri.parse(arrayList.get(pos).getPath());
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
+                    mediaPlayer.start();
+                }else{
+                    mediaPlayer.stop();
+                    Uri uri = Uri.parse(arrayList.get(pos).getPath());
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
+                    mediaPlayer.start();
+                }
 
 
+                pos += 1;
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            }
+        });
+
+        Button back = (Button) findViewById(R.id.backwards);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pos == 0)
+                {
+                    pos = arrayList.size() -1;
+                    mediaPlayer = new MediaPlayer ();
+                    Uri uri = Uri.parse(arrayList.get(pos).getPath());
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
+                    mediaPlayer.start();
+                }else{
+                    mediaPlayer.stop();
+                    Uri uri = Uri.parse(arrayList.get(pos).getPath());
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
+                    mediaPlayer.start();
+                }
+
+                pos -= 1;
+
+            }
+        });
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -73,6 +139,7 @@ public class Home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         permissions();
         SetMusics();
 
@@ -133,7 +200,7 @@ public class Home extends AppCompatActivity
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 
-            mediaPlayer = new MediaPlayer();
+            //mediaPlayer = new MediaPlayer();
             Log.d("Gesture ", " onScroll");
             if (e1.getY() < e2.getY()){
                 Log.d("Gesture ", " Scroll Down");
@@ -150,16 +217,34 @@ public class Home extends AppCompatActivity
             if (e1.getX() < e2.getX()) {
                 Log.d("Gesture ", "Left to Right swipe: "+ e1.getX() + " - " + e2.getX());
                 Log.d("Speed ", String.valueOf(velocityX) + " pixels/second");
-                int fastForward = mediaPlayer.getCurrentPosition();
-                 fastForward += 5000;
-                mediaPlayer.seekTo(fastForward);
+                if (mediaPlayer != null)
+                {
+                    if (mediaPlayer.isPlaying())
+                    {
+                        int fastForward = mediaPlayer.getCurrentPosition();
+                        fastForward += 5000;
+                        mediaPlayer.seekTo(fastForward);
+                    }
+                }
+
+
+
             }
             if (e1.getX() > e2.getX()) {
                 Log.d("Gesture ", "Right to Left swipe: "+ e1.getX() + " - " + e2.getX());
                 Log.d("Speed ", String.valueOf(velocityX) + " pixels/second");
-                int backwards = mediaPlayer.getCurrentPosition();
-                backwards -= 5000;
-                mediaPlayer.seekTo(backwards);
+                if( mediaPlayer != null)
+                {
+                    if (mediaPlayer.isPlaying())
+                    {
+                        int backwards = mediaPlayer.getCurrentPosition();
+                        backwards -= 5000;
+                        mediaPlayer.seekTo(backwards);
+                    }
+
+                }
+
+
             }
 
             return true;
@@ -175,7 +260,9 @@ public class Home extends AppCompatActivity
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+
 
                 if (mediaPlayer == null) {
                     mediaPlayer = new MediaPlayer();
@@ -344,6 +431,4 @@ public class Home extends AppCompatActivity
             //resume tasks needing this permission
         }
     }
-
-
 }

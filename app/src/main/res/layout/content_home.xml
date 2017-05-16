@@ -29,15 +29,13 @@
             android:background="@drawable/backwards"
             tools:ignore="ButtonStyle" />
 
-        <Button
-            android:id="@+id/play"
+        <ImageView
+            android:id="@+id/playerStart"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="mira"/>
-            <!--android:background="@drawable/play1"-->
-            <!--tools:ignore="ButtonStyle" -->
-
+            android:background="@drawable/start"
+            tools:ignore="ButtonStyle" />
 
 
         <Button
